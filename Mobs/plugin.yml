@@ -1,0 +1,5 @@
+version: 1.0
+name: Plugin teste de mobs
+main: com.metrotnx.mobs.Main
+author: Alex Gusmao
+description: Plugin de teste para mobs!

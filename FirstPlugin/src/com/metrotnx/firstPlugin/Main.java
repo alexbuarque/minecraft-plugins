@@ -2,28 +2,65 @@ package com.metrotnx.firstPlugin;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarFlag;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerEggThrowEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.EulerAngle;
 
 public class Main extends JavaPlugin implements Listener{
 
+	BossBar bossbar;
+	
 	@Override
 	public void onEnable() {
 		System.out.println("TEST PLUGIN ENABLED!");
 		
+		//Icone, qtd Players e mensagem do servidor
+		Bukkit.getPluginManager().registerEvents(new PingListener(), this);
+		
 		this.getConfig().options().copyDefaults();
 		saveDefaultConfig();
 		
+		//Registrar eventos
 		Bukkit.getPluginManager().registerEvents(this, this);
 		
+		//Comandos
 		getCommand("heal").setExecutor(new HealCommand());
 		getCommand("number").setExecutor(new NumberCommand());
+		getCommand("consoleonly").setExecutor(new NumberCommand());
+		
+		//spawnar algo
+		spawnStand(new Location(Bukkit.getWorld("world"), 68, 89, 62));
+		
+		//boss bar
+		Bukkit.getPluginManager().registerEvents(new JoinListener(this), this);
+		
+		bossbar = Bukkit.createBossBar(ChatColor.RED + "MazeRunner Disponivel!", 
+				BarColor.GREEN, 
+				BarStyle.SOLID);
+		
+		//bossbar.setProgress(0.5);
+		
+		//Hologramas
+		Bukkit.getPluginManager().registerEvents(new HologramListener(this), this);
+		
+		//Toggling
+		Bukkit.getPluginManager().registerEvents(new ToggleListener(), this);
+		
 	}
 	
 	@Override
@@ -31,6 +68,23 @@ public class Main extends JavaPlugin implements Listener{
 		System.out.println("TEST PLUGIN DISABLED!");
 	}
 	
+	//Hologramas
+	public void spawnHologram(Player player) {
+		String rawName = "Este é um teste|para ver se funciona!";
+		String[] name = rawName.split("|");
+		
+		for(int i = 0; i < name.length; i++) {
+			
+		}
+		
+		ArmorStand stand = (ArmorStand) player.getWorld().spawnEntity(player.getLocation().add(0, 0.5, 0), EntityType.ARMOR_STAND);
+		stand.setVisible(false);
+		stand.setGravity(false);
+		stand.setInvulnerable(true);
+		
+		stand.setCustomNameVisible(true);
+		stand.setCustomName(ChatColor.GRAY + "Criado por " + ChatColor.GREEN + player.getName());
+	}
 	
 	@EventHandler
 	public void onMove(PlayerMoveEvent e) {
@@ -40,6 +94,37 @@ public class Main extends JavaPlugin implements Listener{
 			//e.setCancelled(true);
 		}
 		
+	}
+	
+	//Armor stand things
+	private void spawnStand(Location location) {
+		
+		ArmorStand stand = (ArmorStand) location.getWorld().spawnEntity(location, EntityType.ARMOR_STAND);
+		
+		stand.setSmall(false);
+		stand.setBasePlate(false);
+		stand.setArms(true);
+		
+		stand.setGravity(true);
+		stand.setInvulnerable(true);
+		
+		stand.setCustomName("Alo");
+		stand.setCustomNameVisible(true);
+		stand.setVisible(true);
+		
+		//stand.setHealth(arg0);
+		stand.setChestplate(new ItemStack(Material.DIAMOND_CHESTPLATE));
+		//stand.setLeggings(arg0);
+		//stand.setBoots(arg0);
+		stand.setItemInHand(new ItemStack(Material.APPLE));
+		
+		//52, 125, 81
+		stand.setHeadPose(new EulerAngle(Math.toRadians(52), Math.toRadians(125), Math.toRadians(81)));
+		//stand.setLeftArmPose(arg0);
+		//stand.setRightArmPose(arg0);
+		//stand.setLeftLegPose(arg0);
+		//stand.setRightLegPose(arg0);
+		//stand.setBodyPose(arg0);
 	}
 	
 	@EventHandler

@@ -10,3 +10,4 @@ commands:
   config:
   heal:
   number:
+  consoleonly:

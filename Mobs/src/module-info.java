@@ -1,0 +1,3 @@
+module mobs {
+	requires spigot;
+}

@@ -22,6 +22,8 @@ public class NumberCommand implements CommandExecutor{
 			}else {
 				p.sendMessage("INVALID");
 			}
+		} else {
+			System.out.println("Console command successful!");
 		}
 		
 		
