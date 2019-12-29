@@ -1,0 +1,12 @@
+version: 1.0
+name: FirstPlugin
+main: com.metrotnx.firstPlugin.Main
+author: Alex Gusmão
+description: O melhor plugin até agora!
+commands:
+  hello:
+    aliases: [cura]
+    description: Comando de recuperar vida!
+  config:
+  heal:
+  number:
