@@ -11,3 +11,5 @@ commands:
   heal:
   number:
   consoleonly:
+  serverRules:
+  vanish:

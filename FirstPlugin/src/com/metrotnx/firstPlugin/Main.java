@@ -5,17 +5,21 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarFlag;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Egg;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerEggThrowEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -42,9 +46,11 @@ public class Main extends JavaPlugin implements Listener{
 		getCommand("heal").setExecutor(new HealCommand());
 		getCommand("number").setExecutor(new NumberCommand());
 		getCommand("consoleonly").setExecutor(new NumberCommand());
+		getCommand("serverRules").setExecutor(new ServerCommand(this));
+		getCommand("vanish").setExecutor(new VanishCommand(this));
 		
 		//spawnar algo
-		spawnStand(new Location(Bukkit.getWorld("world"), 68, 89, 62));
+		spawnStand(new Location(Bukkit.getWorld("world"), 8, 4, 3));
 		
 		//boss bar
 		Bukkit.getPluginManager().registerEvents(new JoinListener(this), this);
@@ -60,6 +66,12 @@ public class Main extends JavaPlugin implements Listener{
 		
 		//Toggling
 		Bukkit.getPluginManager().registerEvents(new ToggleListener(), this);
+		
+		//Map Modification
+		Bukkit.getPluginManager().registerEvents(new BlockListener(), this);
+		
+		//Resource packs
+		Bukkit.getPluginManager().registerEvents(new ResourcePacks(), this);
 		
 	}
 	
@@ -92,6 +104,32 @@ public class Main extends JavaPlugin implements Listener{
 		
 		if(!p.hasPermission("firstPlugin.allowmove")) {
 			//e.setCancelled(true);
+		}
+		
+	}
+	
+	//Projeteis
+	@EventHandler
+	public void onLaunch(ProjectileLaunchEvent e) {
+		
+		e.getEntity().getShooter();
+		
+	}
+	
+	@EventHandler
+	public void onHit(ProjectileHitEvent e) {
+		
+		e.getEntity().getShooter();
+		
+	}
+	
+	@EventHandler
+	public void onInteract(PlayerInteractEvent e) {
+		
+		if(e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+			if(e.getPlayer().getItemInHand() != null && e.getPlayer().getItemInHand().getType().equals(Material.DIAMOND_HOE)){
+				Egg egg = e.getPlayer().launchProjectile(Egg.class, e.getPlayer().getLocation().getDirection());
+			}
 		}
 		
 	}

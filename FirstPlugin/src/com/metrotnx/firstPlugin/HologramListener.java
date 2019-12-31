@@ -13,6 +13,8 @@ public class HologramListener implements Listener {
 		this.main = main;
 	}
 	
+	
+	
 	@EventHandler
 	public void onEggThrow(PlayerEggThrowEvent e) {
 		Player player = e.getPlayer();
