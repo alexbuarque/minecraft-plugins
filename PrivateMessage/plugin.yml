@@ -1,0 +1,10 @@
+version: 1.0
+name: PrivateMessage
+main: com.metrotnx.privateMessage.Main
+author: Alex Gusmao
+description: Sistema de mensagens privadas
+commands:
+  message:
+    aliases: [msg]
+  reply:
+    aliases: [r]

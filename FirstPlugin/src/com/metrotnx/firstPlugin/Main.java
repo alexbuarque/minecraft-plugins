@@ -71,8 +71,10 @@ public class Main extends JavaPlugin implements Listener{
 		Bukkit.getPluginManager().registerEvents(new BlockListener(), this);
 		
 		//Resource packs
-		Bukkit.getPluginManager().registerEvents(new ResourcePacks(), this);
+		//Bukkit.getPluginManager().registerEvents(new ResourcePacks(), this);
 		
+		//Sound Events
+		Bukkit.getPluginManager().registerEvents(new SoundEvents(), this);
 	}
 	
 	@Override
