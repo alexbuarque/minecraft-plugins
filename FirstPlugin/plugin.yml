@@ -13,3 +13,6 @@ commands:
   consoleonly:
   serverRules:
   vanish:
+  menu:
+  myskull:
+  anyskull:

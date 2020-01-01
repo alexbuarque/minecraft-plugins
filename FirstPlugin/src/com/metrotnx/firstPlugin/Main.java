@@ -1,5 +1,9 @@
 package com.metrotnx.firstPlugin;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -21,13 +25,18 @@ import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerEggThrowEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.EulerAngle;
 
 public class Main extends JavaPlugin implements Listener{
 
 	BossBar bossbar;
+	
+	//GUI
+	public HashMap<Player, Material> chestSlot = new HashMap<>();
 	
 	@Override
 	public void onEnable() {
@@ -48,6 +57,9 @@ public class Main extends JavaPlugin implements Listener{
 		getCommand("consoleonly").setExecutor(new NumberCommand());
 		getCommand("serverRules").setExecutor(new ServerCommand(this));
 		getCommand("vanish").setExecutor(new VanishCommand(this));
+		getCommand("menu").setExecutor(new MenuCommand(this));
+		getCommand("myskull").setExecutor(new MySkullCommand());
+		getCommand("anyskull").setExecutor(new AnySkullCommand());
 		
 		//spawnar algo
 		spawnStand(new Location(Bukkit.getWorld("world"), 8, 4, 3));
@@ -75,6 +87,13 @@ public class Main extends JavaPlugin implements Listener{
 		
 		//Sound Events
 		Bukkit.getPluginManager().registerEvents(new SoundEvents(), this);
+		
+		//GUI
+		Bukkit.getPluginManager().registerEvents(new MenuListener(this), this);
+		
+		//Signs
+		Bukkit.getPluginManager().registerEvents(new SignListener(), this);
+		
 	}
 	
 	@Override
@@ -108,6 +127,61 @@ public class Main extends JavaPlugin implements Listener{
 			//e.setCancelled(true);
 		}
 		
+	}
+	
+	/*ELYTRA UI*/
+	public void applyElytraUI(Player player) {
+		
+		//BEGINNING
+		
+		Inventory gui = Bukkit.createInventory(null, 45, ChatColor.GREEN + "Elytra menu!");
+		
+		//LORES
+		
+		List<String> enableLore = new ArrayList<>();
+		enableLore.add(ChatColor.GRAY + "Clique em mim para");
+		enableLore.add(ChatColor.GRAY + "ativar o que acontece");
+		
+		List<String> disableLore = new ArrayList<>();
+		disableLore.add(ChatColor.GRAY + "Clique em mim para");
+		disableLore.add(ChatColor.GRAY + "desativar o que acontece");
+		
+		List<String> launchLore = new ArrayList<>();
+		launchLore.add(ChatColor.GRAY + "Clique para ser lançado");
+		launchLore.add(ChatColor.GRAY + "para cima 200 blocos! :D");
+		//ITEMSTACKS
+		
+		ItemStack toggle;
+		ItemMeta toggleMeta;
+		if(player.getInventory().getChestplate() != null && player.getInventory().getChestplate().getType().equals(Material.ELYTRA)) {
+			toggle = new ItemStack(Material.REDSTONE_BLOCK);
+			
+			toggleMeta = toggle.getItemMeta();
+			toggleMeta.setDisplayName(ChatColor.RED + "Disabled Elytra!");
+			toggleMeta.setLore(disableLore);
+		} else {
+			toggle = new ItemStack(Material.EMERALD_BLOCK);
+			
+			toggleMeta = toggle.getItemMeta();
+			toggleMeta.setDisplayName(ChatColor.RED + "Enable Elytra!");
+			toggleMeta.setLore(enableLore);
+		}
+
+		toggle.setItemMeta(toggleMeta);
+		
+		ItemStack launch = new ItemStack(Material.WEB);
+		ItemMeta launchMeta = launch.getItemMeta();
+		launchMeta.setDisplayName(ChatColor.LIGHT_PURPLE + "Launch into to the air!");
+		launchMeta.setLore(launchLore);
+		launch.setItemMeta(launchMeta);
+		
+		//ITEM SETTING
+		
+		gui.setItem(34, toggle);
+		gui.setItem(4, launch);
+		
+		//FINAL
+		player.openInventory(gui);
 	}
 	
 	//Projeteis
